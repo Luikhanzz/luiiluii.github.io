@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios y Controles - Guía Visual Basic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ANIMACIÓN DE LETRAS */
+        @keyframes float-letter {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-15px) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-2deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(74, 144, 226, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(74, 144, 226, 0.8), 0 0 30px rgba(31, 60, 136, 0.6); }
+        }
+
+        h1, h2, h3 {
+            color: #1f3c88;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .letter-animate {
+            display: inline-block;
+            animation: float-letter 2s ease-in-out infinite;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #1f3c88;
+            padding-bottom: 12px;
+            position: relative;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2, #1f3c88, #4a90e2);
+            border-radius: 2px;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { width: 0; left: 0; }
+            50% { width: 100%; }
+            100% { width: 0; right: 0; left: auto; }
+        }
+
+        h3 {
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #2d5aa8;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #FFEBCD 0%, #FFE4B5 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            box-shadow: 0 15px 35px rgba(255, 235, 205, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 235, 205, 0.2);
+            border-radius: 50%;
+            top: -100px;
+            right: -50px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 235, 205, 0.15);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -50px;
+            animation: pulse 5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: #000;
+        }
+
+        /* NAVEGACIÓN */
+        .top-nav {
+            background: linear-gradient(180deg, #FFEBCD 0%, #FFE4B5 100%);
+            box-shadow: 0 8px 20px rgba(255, 235, 205, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-nav ul li {
+            margin: 0;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .top-nav ul li a {
+            display: block;
+            padding: 18px 20px;
+            color: #1f3c88;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            text-align: center;
+            position: relative;
+        }
+
+        .top-nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2, #00d4ff);
+            transition: width 0.3s ease;
+        }
+
+        .top-nav ul li a:hover {
+            background-color: rgba(31, 60, 136, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .top-nav ul li a:hover::before {
+            width: 100%;
+        }
+
+        .top-nav ul li a.active {
+            background: linear-gradient(180deg, #FFE4B5 0%, #FFEBCD 100%);
+            border-bottom-color: #1f3c88;
+            color: #1f3c88;
+            font-weight: 700;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        /* SUBTEMAS */
+        .subtema {
+            background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+            border-left: 6px solid #1f3c88;
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 25px rgba(31, 60, 136, 0.12);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtema::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .subtema:hover {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f3f0 100%);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(31, 60, 136, 0.2);
+            border-left-color: #4a90e2;
+        }
+
+        .subtema:hover::before {
+            opacity: 1;
+        }
+
+        .subtema p {
+            color: #555;
+            margin-bottom: 18px;
+            font-size: 1.08em;
+            line-height: 1.9;
+        }
+
+        .subtema ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .subtema li {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.06em;
+            transition: all 0.3s ease;
+            padding-left: 10px;
+        }
+
+        .subtema li:hover {
+            color: #1f3c88;
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        /* SECCIONES CON COLORES DIFERENTES */
+        #formularios { border-left-color: #ff6b6b; }
+        #formularios:hover { border-left-color: #ff8787; box-shadow: 0 20px 45px rgba(255, 107, 107, 0.15); }
+
+        #controles_basicos { border-left-color: #4ecdc4; }
+        #controles_basicos:hover { border-left-color: #6ee7de; box-shadow: 0 20px 45px rgba(78, 205, 196, 0.15); }
+
+        #controles_seleccion { border-left-color: #7c3aed; }
+        #controles_seleccion:hover { border-left-color: #a78bfa; box-shadow: 0 20px 45px rgba(124, 58, 237, 0.15); }
+
+        #propiedades_controles { border-left-color: #f59e0b; }
+        #propiedades_controles:hover { border-left-color: #fbbf24; box-shadow: 0 20px 45px rgba(245, 158, 11, 0.15); }
+
+        #uso_practico { border-left-color: #10b981; }
+        #uso_practico:hover { border-left-color: #34d399; box-shadow: 0 20px 45px rgba(16, 185, 129, 0.15); }
+
+        /* MEDIA CONTENT */
+        .media-container {
+            margin: 25px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .image-box, .video-box, .code-box {
+            background: linear-gradient(135deg, #f0ebe0 0%, #e5dfd5 100%);
+            border: 2px solid #1f3c88;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #1f3c88;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .image-box:hover, .video-box:hover, .code-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(31, 60, 136, 0.2);
+            border-color: #4a90e2;
+        }
+
+        .image-box img, .video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-placeholder {
+            text-align: center;
+            font-size: 3em;
+            color: #4a90e2;
+        }
+
+        /* BOTÓN VOLVER AL INICIO */
+        #scrollToTop {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #1f3c88 0%, #162447 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 6px 20px rgba(31, 60, 136, 0.4);
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollToTop:hover {
+            transform: scale(1.15);
+            box-shadow: 0 10px 30px rgba(31, 60, 136, 0.5);
+        }
+
+        /* TABLA DE CONTENIDOS */
+        .table-of-contents {
+            background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+            border-left: 6px solid #4a90e2;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
+        }
+
+        .table-of-contents h3 {
+            color: #1f3c88;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .table-of-contents ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .table-of-contents li {
+            margin-bottom: 10px;
+        }
+
+        .table-of-contents a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .table-of-contents a:hover {
+            color: #1f3c88;
+            transform: translateX(8px);
+        }
+
+        /* DARK MODE TOGGLE */
+        #darkModeToggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1f3c88 0%, #162447 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(31, 60, 136, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #darkModeToggle:hover {
+            transform: scale(1.1) rotate(20deg);
+            box-shadow: 0 8px 25px rgba(31, 60, 136, 0.5);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 15px;
+            }
+
+            header h1 {
+                font-size: 2.3em;
+            }
+
+            header p {
+                font-size: 1.1em;
+            }
+
+            .top-nav ul {
+                flex-direction: column;
+            }
+
+            .top-nav ul li {
+                min-width: 100%;
+            }
+
+            .top-nav ul li a {
+                padding: 14px 15px;
+                font-size: 0.9em;
+            }
+
+            .subtema {
+                padding: 25px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.7em;
+            }
+
+            .media-container {
+                grid-template-columns: 1fr;
+            }
+
+            #scrollToTop {
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                right: 30px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 30px 12px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            .subtema {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.1em;
+            }
+        }
+
+        /* DARK MODE */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+            color: #90caf9;
+        }
+
+        body.dark-mode .subtema {
+            background: linear-gradient(135deg, #1e1e2e 0%, #242433 100%);
+            color: #e0e0e0;
+            border-left-color: #64b5f6;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .subtema:hover {
+            background: linear-gradient(135deg, #252535 0%, #2a2a3a 100%);
+            box-shadow: 0 20px 45px rgba(100, 181, 246, 0.2);
+        }
+
+        body.dark-mode .subtema p, body.dark-mode .subtema li {
+            color: #d0d0d0;
+        }
+
+        body.dark-mode .image-box, body.dark-mode .video-box, body.dark-mode .code-box {
+            background: linear-gradient(135deg, #2a2a3a 0%, #252535 100%);
+            border-color: #64b5f6;
+            color: #90caf9;
+        }
+
+        body.dark-mode .table-of-contents {
+            background: linear-gradient(135deg, #1e1e2e 0%, #242433 100%);
+            border-left-color: #64b5f6;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .table-of-contents a {
+            color: #64b5f6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <span class="letter-animate">F</span><span class="letter-animate">o</span><span class="letter-animate">r</span><span class="letter-animate">m</span><span class="letter-animate">u</span><span class="letter-animate">l</span><span class="letter-animate">a</span><span class="letter-animate">r</span><span class="letter-animate">i</span><span class="letter-animate">o</span><span class="letter-animate">s</span>
+            <span class="letter-animate">y</span>
+            <span class="letter-animate">C</span><span class="letter-animate">o</span><span class="letter-animate">n</span><span class="letter-animate">t</span><span class="letter-animate">r</span><span class="letter-animate">o</span><span class="letter-animate">l</span><span class="letter-animate">e</span><span class="letter-animate">s</span>
+        </h1>
+        <p>💻 Crea interfaces interactivas y atractivas</p>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+            <li><a href="index.html">🏠 Inicio</a></li>
+            <li><a href="ConceptosBásicos.html">🧩 Conceptos Básicos</a></li>
+            <li><a href="Formularios y controles.html" class="active">🧱 Formularios y Controles</a></li>
+            <li><a href="Variables tipos de datos  y Operadores.html">📊 Variables, Tipos de Datos y Operadores</a></li>
+            <li><a href="Eventos y Estructuras de controles.html">⚙️ Eventos y Estructuras de Control</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Formularios -->
+        <div class="subtema" id="formularios">
+            <h2>📌 Formularios</h2>
+            <h3>¿Qué es un formulario?</h3>
+            <p>Un formulario es la ventana principal de una aplicación donde el usuario interactúa con el programa.</p>
+
+            <div class="media-container">
+                
+            </div>
+
+            <h3>Propiedades del formulario</h3>
+            <p>Las propiedades permiten modificar características como:</p>
+            <ul>
+                <li>📏 Tamaño</li>
+                <li>🎨 Color</li>
+                <li>📝 Título</li>
+                <li>📍 Posición</li>
+            </ul>
+
+            <h3>Diseño de interfaces</h3>
+            <p>Un buen diseño facilita el uso del programa, mejora la experiencia del usuario y evita confusiones.</p>
+
+          
+                        <div class="media-container">
+                <div class="image-box">
+                    <div class="media-placeholder"><img src="formulario.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles básicos -->
+        <div class="subtema" id="controles_basicos">
+            <h2>🧩 Controles básicos</h2>
+            <h3>Label</h3>
+            <p>Muestra texto informativo que el usuario no puede modificar. Se utiliza para etiquetar otros controles.</p>
+
+            <h3>TextBox</h3>
+            <p>Permite al usuario ingresar datos, como nombres o números. Es uno de los controles más utilizados.</p>
+
+        
+            <h3>Button</h3>
+            <p>Ejecuta una acción cuando se hace clic sobre él. Es el control principal para interactuar con el usuario.</p>
+            <div class="media-container">
+                <div class="image-box">
+                    <div class="media-placeholder"><img src="CONTROLESH.gif" alt=""></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de selección -->
+        <div class="subtema" id="controles_seleccion">
+            <h2>✓ Controles de selección</h2>
+            <h3>CheckBox</h3>
+            <p>Permite seleccionar una o varias opciones de forma simultánea. Cada checkbox es independiente.</p>
+
+            <h3>RadioButton</h3>
+            <p>Permite seleccionar una sola opción dentro de un grupo. Solo una opción puede estar seleccionada.</p>
+
+        
+
+
+            <h3>ComboBox</h3>
+            <p>Muestra una lista desplegable de opciones. El usuario puede seleccionar una opción de la lista.</p>
+
+            <h3>ListBox</h3>
+            <p>Muestra una lista visible de elementos. El usuario puede ver todas las opciones sin expandir.</p>
+             <div class="media-container">
+                <div class="image-box">
+                    <div class="media-placeholder"><img src="controles.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Propiedades de los controles -->
+        <div class="subtema" id="propiedades_controles">
+            <h2>⚙️ Propiedades de los controles</h2>
+            <h3>Name</h3>
+            <p>Nombre interno del control para usarlo en el código. Debe ser único y descriptivo.</p>
+
+            <h3>Text</h3>
+            <p>Texto que se muestra al usuario. Puede cambiar dinámicamente durante la ejecución.</p>
+
+           
+
+            <h3>Enabled</h3>
+            <p>Permite habilitar o deshabilitar un control. Un control deshabilitado no responde a eventos.</p>
+
+            <h3>Visible</h3>
+            <p>Controla si el control se muestra o no en pantalla. Útil para mostrar/ocultar controles.</p>
+             <div class="media-container">
+                <div class="image-box">
+                    <div class="media-placeholder"><img src="PROPIEDADES..gif" alt=""></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Uso práctico -->
+        <div class="subtema" id="uso_practico">
+            <h2>🛠️ Uso práctico</h2>
+            <h3>Formularios interactivos</h3>
+            <p>Permiten que el usuario ingrese datos y obtenga respuestas del programa en tiempo real.</p>
+
+            <h3>Ejemplo de formulario básico</h3>
+            <p>Un formulario con:</p>
+            <ul>
+                <li>🏷️ Labels para indicar información</li>
+                <li>📝 TextBox para ingresar datos</li>
+                <li>🔘 Buttons para ejecutar acciones</li>
+            </ul>
+
+            
+            <h3>Buenas prácticas de diseño</h3>
+            <ul>
+                <li>✅ Usar nombres claros y descriptivos</li>
+                <li>✅ No saturar la interfaz con demasiados controles</li>
+                <li>✅ Ordenar controles de forma lógica</li>
+                <li>✅ Usar colores adecuados y coherentes</li>
+                <li>✅ Mantener alineación y espaciado uniforme</li>
+            </ul>
+        </div>
+             <!-- Juego Educaplay -->
+        <div class="subtema" id="juego_educaplay">
+            <h2>🎮 Juego Interactivo - Educaplay</h2>
+            <p>¡Pon a prueba tus conocimientos sobre: Formularios y Controles en Visual Basic!</p>
+            
+            <div class="game-container">
+                <div class="game-box">
+                  <iframe allow="fullscreen; autoplay; allow-top-navigation-by-user-activation" allowfullscreen width="1100" height="690" frameborder="0" src="https://es.educaplay.com/juego/27372233-formularios_y_controles_en_visual_basic.html"></iframe>
+
+
+    </main>
+
+    <button id="scrollToTop">↑</button>
+
+    <script>
+        const letters = document.querySelectorAll('.letter-animate');
+        letters.forEach((letter, index) => {
+            letter.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        function setActiveNavigation() {
+            const links = document.querySelectorAll('.top-nav ul li a');
+            const currentUrl = location.href;
+
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.href === currentUrl) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        setActiveNavigation();
+        window.addEventListener('hashchange', setActiveNavigation);
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const subtemas = document.querySelectorAll('.subtema');
+        subtemas.forEach(subtema => {
+            subtema.style.opacity = '0';
+            subtema.style.transform = 'translateY(20px)';
+            observer.observe(subtema);
+        });
+
+        function generateTableOfContents() {
+            const main = document.querySelector('main');
+            const headings = main.querySelectorAll('h2');
+            
+            if (headings.length === 0) return;
+
+            const tocContainer = document.createElement('div');
+            tocContainer.className = 'table-of-contents';
+            tocContainer.innerHTML = '<h3>📑 Tabla de Contenidos</h3><ul></ul>';
+            
+            const tocList = tocContainer.querySelector('ul');
+
+            headings.forEach((heading, index) => {
+                if (!heading.id) {
+                    heading.id = `section-${index}`;
+                }
+
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${heading.id}`;
+                a.textContent = heading.textContent;
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+                
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+
+            main.insertBefore(tocContainer, main.firstChild);
+        }
+
+        generateTableOfContents();
+
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.style.display = 'flex';
+            } else {
+                scrollToTopBtn.style.display = 'none';
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function initDarkMode() {
+            const toggle = document.getElementById('darkModeToggle');
+            let darkMode = localStorage.getItem('darkMode') === 'true';
+
+            const applyDarkMode = () => {
+                if (darkMode) {
+                    document.body.classList.add('dark-mode');
+                    toggle.innerHTML = '☀️';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    toggle.innerHTML = '🌙';
+                }
+            };
+
+            toggle.addEventListener('click', () => {
+                darkMode = !darkMode;
+                localStorage.setItem('darkMode', darkMode);
+                applyDarkMode();
+            });
+
+            apply

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos y Estructuras de Control - Guía Visual Basic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ANIMACIÓN DE LETRAS */
+        @keyframes float-letter {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-15px) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-2deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(74, 144, 226, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(74, 144, 226, 0.8), 0 0 30px rgba(31, 60, 136, 0.6); }
+        }
+
+        h1, h2, h3 {
+            color: #1f3c88;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .letter-animate {
+            display: inline-block;
+            animation: float-letter 2s ease-in-out infinite;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #1f3c88;
+            padding-bottom: 12px;
+            position: relative;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2, #1f3c88, #4a90e2);
+            border-radius: 2px;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { width: 0; left: 0; }
+            50% { width: 100%; }
+            100% { width: 0; right: 0; left: auto; }
+        }
+
+        h3 {
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #2d5aa8;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #FFEBCD 0%, #FFE4B5 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            box-shadow: 0 15px 35px rgba(255, 235, 205, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 235, 205, 0.2);
+            border-radius: 50%;
+            top: -100px;
+            right: -50px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 235, 205, 0.15);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -50px;
+            animation: pulse 5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: #000;
+        }
+
+        /* NAVEGACIÓN */
+        .top-nav {
+            background: linear-gradient(180deg, #FFEBCD 0%, #FFE4B5 100%);
+            box-shadow: 0 8px 20px rgba(255, 235, 205, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-nav ul li {
+            margin: 0;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .top-nav ul li a {
+            display: block;
+            padding: 18px 20px;
+            color: #1f3c88;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            text-align: center;
+            position: relative;
+        }
+
+        .top-nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2, #00d4ff);
+            transition: width 0.3s ease;
+        }
+
+        .top-nav ul li a:hover {
+            background-color: rgba(31, 60, 136, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .top-nav ul li a:hover::before {
+            width: 100%;
+        }
+
+        .top-nav ul li a.active {
+            background: linear-gradient(180deg, #FFE4B5 0%, #FFEBCD 100%);
+            border-bottom-color: #1f3c88;
+            color: #1f3c88;
+            font-weight: 700;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        /* SUBTEMAS */
+        .subtema {
+            background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+            border-left: 6px solid #1f3c88;
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 25px rgba(31, 60, 136, 0.12);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtema::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .subtema:hover {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f3f0 100%);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(31, 60, 136, 0.2);
+            border-left-color: #4a90e2;
+        }
+
+        .subtema:hover::before {
+            opacity: 1;
+        }
+
+        .subtema p {
+            color: #555;
+            margin-bottom: 18px;
+            font-size: 1.08em;
+            line-height: 1.9;
+        }
+
+        .subtema ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .subtema li {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.06em;
+            transition: all 0.3s ease;
+            padding-left: 10px;
+        }
+
+        .subtema li:hover {
+            color: #1f3c88;
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        /* SECCIONES CON COLORES DIFERENTES */
+        #eventos { border-left-color: #ff6b6b; }
+        #eventos:hover { border-left-color: #ff8787; box-shadow: 0 20px 45px rgba(255, 107, 107, 0.15); }
+
+        #poe { border-left-color: #4ecdc4; }
+        #poe:hover { border-left-color: #6ee7de; box-shadow: 0 20px 45px rgba(78, 205, 196, 0.15); }
+
+        #estructuras_condicionales { border-left-color: #7c3aed; }
+        #estructuras_condicionales:hover { border-left-color: #a78bfa; box-shadow: 0 20px 45px rgba(124, 58, 237, 0.15); }
+
+        #estructuras_repetitivas { border-left-color: #f59e0b; }
+        #estructuras_repetitivas:hover { border-left-color: #fbbf24; box-shadow: 0 20px 45px rgba(245, 158, 11, 0.15); }
+
+        #aplicaciones { border-left-color: #10b981; }
+        #aplicaciones:hover { border-left-color: #34d399; box-shadow: 0 20px 45px rgba(16, 185, 129, 0.15); }
+
+        #juego_educaplay { border-left-color: #ec4899; }
+        #juego_educaplay:hover { border-left-color: #f472b6; box-shadow: 0 20px 45px rgba(236, 72, 153, 0.15); }
+
+        /* GAME BOX */
+        .game-container {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-box {
+            background: linear-gradient(135deg, #f0ebe0 0%, #e5dfd5 100%);
+            border: 2px solid #ec4899;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            min-height: 500px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #ec4899;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(236, 72, 153, 0.3);
+            border-color: #f472b6;
+        }
+
+        .game-placeholder {
+            text-align: center;
+            font-size: 3em;
+            color: #ec4899;
+        }
+
+        /* BOTÓN VOLVER AL INICIO */
+        #scrollToTop {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #1f3c88 0%, #162447 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 6px 20px rgba(31, 60, 136, 0.4);
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollToTop:hover {
+            transform: scale(1.15);
+            box-shadow: 0 10px 30px rgba(31, 60, 136, 0.5);
+        }
+
+        /* TABLA DE CONTENIDOS */
+        .table-of-contents {
+            background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+            border-left: 6px solid #4a90e2;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
+        }
+
+        .table-of-contents h3 {
+            color: #1f3c88;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .table-of-contents ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .table-of-contents li {
+            margin-bottom: 10px;
+        }
+
+        .table-of-contents a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .table-of-contents a:hover {
+            color: #1f3c88;
+            transform: translateX(8px);
+        }
+
+        /* DARK MODE TOGGLE */
+        #darkModeToggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1f3c88 0%, #162447 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(31, 60, 136, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #darkModeToggle:hover {
+            transform: scale(1.1) rotate(20deg);
+            box-shadow: 0 8px 25px rgba(31, 60, 136, 0.5);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 15px;
+            }
+
+            header h1 {
+                font-size: 2.3em;
+            }
+
+            header p {
+                font-size: 1.1em;
+            }
+
+            .top-nav ul {
+                flex-direction: column;
+            }
+
+            .top-nav ul li {
+                min-width: 100%;
+            }
+
+            .top-nav ul li a {
+                padding: 14px 15px;
+                font-size: 0.9em;
+            }
+
+            .subtema {
+                padding: 25px;
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 1.7em;
+            }
+
+            #scrollToTop {
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                right: 30px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 30px 12px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            .subtema {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.1em;
+            }
+        }
+
+        /* DARK MODE */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+            color: #90caf9;
+        }
+
+        body.dark-mode .subtema {
+            background: linear-gradient(135deg, #1e1e2e 0%, #242433 100%);
+            color: #e0e0e0;
+            border-left-color: #64b5f6;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .subtema:hover {
+            background: linear-gradient(135deg, #252535 0%, #2a2a3a 100%);
+            box-shadow: 0 20px 45px rgba(100, 181, 246, 0.2);
+        }
+
+        body.dark-mode .subtema p, body.dark-mode .subtema li {
+            color: #d0d0d0;
+        }
+
+        body.dark-mode .game-box {
+            background: linear-gradient(135deg, #2a2a3a 0%, #252535 100%);
+            border-color: #f472b6;
+            color: #f472b6;
+        }
+
+        body.dark-mode .table-of-contents {
+            background: linear-gradient(135deg, #1e1e2e 0%, #242433 100%);
+            border-left-color: #64b5f6;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .table-of-contents a {
+            color: #64b5f6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <span class="letter-animate">E</span><span class="letter-animate">v</span><span class="letter-animate">e</span><span class="letter-animate">n</span><span class="letter-animate">t</span><span class="letter-animate">o</span><span class="letter-animate">s</span>
+            <span class="letter-animate">y</span>
+            <span class="letter-animate">E</span><span class="letter-animate">s</span><span class="letter-animate">t</span><span class="letter-animate">r</span><span class="letter-animate">u</span><span class="letter-animate">c</span><span class="letter-animate">t</span><span class="letter-animate">u</span><span class="letter-animate">r</span><span class="letter-animate">a</span><span class="letter-animate">s</span>
+        </h1>
+        <p>💻 Control del flujo de tu aplicación</p>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+            <li><a href="index.html">🏠 Inicio</a></li>
+            <li><a href="ConceptosBásicos.html">🧩 Conceptos Básicos</a></li>
+            <li><a href="Formularios y controles.html">🧱 Formularios y Controles</a></li>
+            <li><a href="Variables tipos de datos  y Operadores.html">📊 Variables, Tipos de Datos y Operadores</a></li>
+            <li><a href="Eventos y Estructuras de controles.html" class="active">⚙️ Eventos y Estructuras de Control</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Eventos -->
+        <div class="subtema" id="eventos">
+            <h2>🔹 Eventos</h2>
+            <h3>¿Qué es un evento?</h3>
+            <p>Un evento es una acción o suceso que ocurre dentro de un programa cuando el usuario interactúa o el sistema realiza una acción automática.</p>
+            <p>Ejemplos de eventos:</p>
+            <ul>
+                <li>🖱️ Clic del mouse</li>
+                <li>⌨️ Escribir texto</li>
+                <li>📂 Cargar una ventana</li>
+                <li>✓ Seleccionar una opción</li>
+                <li>❌ Cerrar un formulario</li>
+            </ul>
+            <p><strong>Importancia:</strong> Los eventos permiten que el programa sea interactivo y responda a las acciones del usuario.</p>
+
+            <h3>Evento Click</h3>
+            <p>Se activa cuando el usuario hace clic sobre un control.</p>
+            <ul>
+                <li>🧮 Ejecutar cálculos</li>
+                <li>💬 Mostrar mensajes</li>
+                <li>💾 Guardar información</li>
+                <li>♻️ Cambiar valores en la aplicación</li>
+            </ul>
+            <p><strong>Ejemplo:</strong> Al presionar "Calcular", el programa realiza operaciones y muestra el resultado.</p>
+
+            <h3>Evento Load</h3>
+            <p>Se ejecuta automáticamente al abrir el formulario por primera vez.</p>
+            <ul>
+                <li>📝 Inicializar variables</li>
+                <li>⚙️ Establecer valores por defecto</li>
+                <li>📥 Cargar datos iniciales</li>
+                <li>🔧 Configurar controles</li>
+            </ul>
+
+            <h3>Evento TextChanged</h3>
+            <p>Se activa cada vez que se modifica el contenido de un TextBox.</p>
+            <ul>
+                <li>✔️ Validar datos en tiempo real</li>
+                <li>⛔ Evitar caracteres incorrectos</li>
+                <li>⚠️ Mostrar advertencias</li>
+                <li>🔄 Actualizar información automáticamente</li>
+            </ul>
+         <div class="media-container">
+                <div class="image-box">
+                    <center><div class="media-placeholder"><img src="evento.png" alt=""></div></center>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Programación orientada a eventos -->
+        <div class="subtema" id="poe">
+            <h2>🔹 Programación orientada a eventos</h2>
+            <p>Modelo donde el flujo del programa depende de los eventos y no de una secuencia fija.</p>
+            <p><strong>Ejemplo:</strong> El programa espera que el usuario presione un botón para ejecutar una acción.</p>
+            
+            <h3>Relación con los controles</h3>
+            <ul>
+                <li>🔘 Button → Click</li>
+                <li>📝 TextBox → TextChanged</li>
+                <li>📋 Form → Load</li>
+            </ul>
+
+            <h3>Ventajas</h3>
+            <ul>
+                <li>✅ Programas más interactivos</li>
+                <li>✅ Mayor control de acciones del usuario</li>
+                <li>✅ Interfaces gráficas intuitivas</li>
+                <li>✅ Mejor experiencia de usuario</li>
+            </ul>
+            <div class="media-container">
+                <div class="image-box">
+                    <center><div class="media-placeholder"><img src="poo.jpg" alt=""></div></center>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estructuras condicionales -->
+        <div class="subtema" id="estructuras_condicionales">
+            <h2>🔀 Estructuras condicionales</h2>
+            <p>Permiten que el programa tome decisiones evaluando si una condición es verdadera o falsa.</p>
+            
+            <h3>If…Then</h3>
+            <p>Ejecuta un bloque de código solo si la condición es verdadera.</p>
+            <ul>
+                <li>✔️ Validar datos</li>
+                <li>👤 Verificar edad</li>
+                <li>🔢 Comprobar valores numéricos</li>
+            </ul>
+
+            <h3>If…Else</h3>
+            <p>Permite ejecutar un bloque si la condición es verdadera y otro si es falsa.</p>
+
+            <h3>Select Case</h3>
+            <p>Se utiliza cuando hay múltiples opciones posibles, evaluando una expresión y ejecutando el bloque que coincida.</p>
+             <div class="media-container">
+                <div class="image-box">
+                    <center><div class="media-placeholder"><img src="ESTRUCTURA condicional.png" alt=""></div></center>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Estructuras repetitivas -->
+        <div class="subtema" id="estructuras_repetitivas">
+            <h2>🔁 Estructuras repetitivas</h2>
+            
+            <h3>For…Next</h3>
+            <p>Se usa cuando se sabe cuántas veces debe repetirse una acción.</p>
+            <ul>
+                <li>1️⃣ Contar números</li>
+                <li>🧮 Repetir cálculos</li>
+                <li>📋 Procesar listas</li>
+            </ul>
+
+            <h3>While</h3>
+            <p>Repite un bloque mientras una condición sea verdadera. Si la condición nunca cambia, el ciclo puede ser infinito.</p>
+
+            <h3>Do While</h3>
+            <p>Ejecuta el bloque al menos una vez y luego evalúa la condición.</p>
+            <ul>
+                <li>🎮 Menús interactivos</li>
+                <li>✔️ Validaciones mínimas</li>
+                <li>🔄 Procesos que deben ejecutarse al menos una vez</li>
+            </ul>
+             <div class="media-container">
+                <div class="image-box">
+                    <center><div class="media-placeholder"><img src="while.gif" alt=""></div></center>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Aplicaciones prácticas -->
+        <div class="subtema" id="aplicaciones">
+            <h2>🛠️ Aplicaciones prácticas</h2>
+            
+            <h3>Validación de datos</h3>
+            <p>Verifica que los datos ingresados sean correctos antes de continuar con el proceso.</p>
+
+            <h3>Toma de decisiones</h3>
+            <p>Permite que el programa elija qué acción realizar según una condición evaluada.</p>
+
+            <h3>Repetición de procesos</h3>
+            <p>Automatiza tareas que se repiten constantemente, mejorando la eficiencia del programa.</p>
+        </div>
+
+        <!-- Juego Educaplay -->
+        <div class="subtema" id="juego_educaplay">
+            <h2>🎮 Juego Interactivo - Educaplay</h2>
+            <p>¡Pon a prueba tus conocimientos sobre eventos y estructuras de control con este juego interactivo!</p>
+            
+            <div class="game-container">
+                <div class="game-box">
+                
+
+ <iframe allow="fullscreen; autoplay; allow-top-navigation-by-user-activation" allowfullscreen width="1500" height="690" frameborder="0" src="https://www.educaplay.com/game/27372669-desafio_de_eventos_y_condicionales.html"></iframe>
+                </div>
+           
+    </main>
+
+    <button id="scrollToTop">↑</button>
+
+    <script>
+        // ============================================
+        // ANIMACIÓN DE LETRAS CON RETRASO
+        // ============================================
+        const letters = document.querySelectorAll('.letter-animate');
+        letters.forEach((letter, index) => {
+            letter.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // ============================================
+        // NAVEGACIÓN ACTIVA
+        // ============================================
+        function setActiveNavigation() {
+            const links = document.querySelectorAll('.top-nav ul li a');
+            const currentUrl = location.href;
+
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.href === currentUrl) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        setActiveNavigation();
+        window.addEventListener('hashchange', setActiveNavigation);
+
+        // ============================================
+        // SCROLL SUAVE
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================
+        // ANIMACIÓN CON INTERSECTION OBSERVER
+        // ============================================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const subtemas = document.querySelectorAll('.subtema');
+        subtemas.forEach(subtema => {
+            subtema.style.opacity = '0';
+            subtema.style.transform = 'translateY(20px)';
+            observer.observe(subtema);
+        });
+
+        // ============================================
+        // TABLA DE CONTENIDOS DINÁMICA
+        // ============================================
+        function generateTableOfContents() {
+            const main = document.querySelector('main');
+            const headings = main.querySelectorAll('h2');
+            
+            if (headings.length === 0) return;
+
+            const tocContainer = document.createElement('div');
+            tocContainer.className = 'table-of-contents';
+            tocContainer.innerHTML = '<h3>📑 Tabla de Contenidos</h3><ul></ul>';
+            
+            const tocList = tocContainer.querySelector('ul');
+
+            headings.forEach((heading, index) => {
+                if (!heading.id) {
+                    heading.id = `section-${index}`;
+                }
+
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${heading.id}`;
+                a.textContent =
